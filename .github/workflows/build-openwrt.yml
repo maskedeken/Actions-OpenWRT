@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  REPO_URL: https://github.com/maskedeken/immortalwrt
-  REPO_BRANCH: openwrt-18.06-k5.4
+  REPO_URL: https://github.com/maskedeken/openwrt
+  REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   UPLOAD_BIN_DIR: false
