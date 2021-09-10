@@ -52,6 +52,7 @@ jobs:
     - name: Load custom configuration and patch
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        cd openwrt
         for file in $GITHUB_WORKSPACE/x-patches/*.patch;do
             patch -p1 < $file
         done
