@@ -49,9 +49,12 @@ jobs:
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
 
-    - name: Load custom configuration
+    - name: Load custom configuration and patch
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        for file in $GITHUB_WORKSPACE/x-patches/*.patch;do
+            patch -p1 < $file
+        done
 
     - name: Download package
       id: package
