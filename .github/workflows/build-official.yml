@@ -1,4 +1,4 @@
-name: Build X-Wrt
+name: Build official
 
 # Controls when the action will run. 
 on:
