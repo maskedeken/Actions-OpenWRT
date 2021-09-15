@@ -1,0 +1,117 @@
+diff -ur a/package/feeds/luci/luci-base/po/zh_Hans/base.po b/package/feeds/luci/luci-base/po/zh_Hans/base.po
+--- a/package/feeds/luci/luci-base/po/zh_Hans/base.po	2021-09-15 03:37:11.272813310 +0000
++++ b/package/feeds/luci/luci-base/po/zh_Hans/base.po	2021-09-15 05:15:25.952102116 +0000
+@@ -8676,6 +8701,33 @@
+ msgid "« Back"
+ msgstr "« 后退"
+ 
++msgid "Enables The 802.11k standard provides information to discover the best available access point"
++msgstr "启用 802.11k 自动寻找发现最佳可用接入点的信息"
++
++msgid "Enable neighbor report via radio measurements"
++msgstr "启用无线电测量邻居报告"
++
++msgid "Enable beacon report via radio measurements"
++msgstr "启用无线电测量信标报告"
++
++msgid "Enables 802.11v allows client devices to exchange information about the network topology,tating overall improvement of the wireless network."
++msgstr "启用 802.11v 将允许客户端设备交换有关网络拓扑的信息，从而全面改善无线网络漫游"
++
++msgid "extended sleep mode for stations"
++msgstr "扩展无线休眠节能模式"
++
++msgid "BSS Transition Management"
++msgstr "BSS 传输管理"
++
++msgid "Time advertisement"
++msgstr "广播同步时间"
++
++msgid "time zone"
++msgstr "时区"
++
++msgid "Local time zone as specified in 8.3 of IEEE Std 1003.1-2004"
++msgstr "本地时区采用 IEEE Std 1003.1-2004 的 8.3 格式（例如 UTC8）"
++
+ #~ msgid "Enable promiscious mode"
+ #~ msgstr "启用混杂模式"
+ 
+diff -ur a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+--- a/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js	2021-09-15 03:23:08.362576626 +0000
++++ b/package/feeds/luci/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js	2021-09-15 03:29:06.403184818 +0000
+@@ -1497,6 +1497,76 @@
+ 
+ 
+ 				if (hwtype == 'mac80211') {
++
++					// Probe 802.11k support
++					o = ss.taboption('encryption', form.Flag, 'ieee80211k', _('802.11k'), _('Enables The 802.11k standard provides information to discover the best available access point'));
++					o.depends({ mode: 'ap', encryption: 'wpa' });
++					o.depends({ mode: 'ap', encryption: 'wpa2' });
++					o.depends({ mode: 'ap-wds', encryption: 'wpa' });
++					o.depends({ mode: 'ap-wds', encryption: 'wpa2' });
++					o.depends({ mode: 'ap', encryption: 'psk' });
++					o.depends({ mode: 'ap', encryption: 'psk2' });
++					o.depends({ mode: 'ap', encryption: 'psk-mixed' });
++					o.depends({ mode: 'ap-wds', encryption: 'psk' });
++					o.depends({ mode: 'ap-wds', encryption: 'psk2' });
++					o.depends({ mode: 'ap-wds', encryption: 'psk-mixed' });
++					o.depends({ mode: 'ap', encryption: 'sae' });
++					o.depends({ mode: 'ap', encryption: 'sae-mixed' });
++					o.depends({ mode: 'ap-wds', encryption: 'sae' });
++					o.depends({ mode: 'ap-wds', encryption: 'sae-mixed' });
++					o.rmempty = true;
++
++					o = ss.taboption('encryption', form.Flag, 'rrm_neighbor_report', _('Enable neighbor report via radio measurements'));
++					o.default = o.enabled;
++					o.depends({ ieee80211k: '1' });
++					o.rmempty = true;
++
++					o = ss.taboption('encryption', form.Flag, 'rrm_beacon_report', _('Enable beacon report via radio measurements'));
++					o.default = o.enabled;
++					o.depends({ ieee80211k: '1' });
++					o.rmempty = true;
++					// End of 802.11k options
++
++					// Probe 802.11v support
++					o = ss.taboption('encryption', form.Flag, 'ieee80211v', _('802.11v'), _('Enables 802.11v allows client devices to exchange information about the network topology,tating overall improvement of the wireless network.'));
++					o.depends({ mode: 'ap', encryption: 'wpa' });
++					o.depends({ mode: 'ap', encryption: 'wpa2' });
++					o.depends({ mode: 'ap-wds', encryption: 'wpa' });
++					o.depends({ mode: 'ap-wds', encryption: 'wpa2' });
++					o.depends({ mode: 'ap', encryption: 'psk' });
++					o.depends({ mode: 'ap', encryption: 'psk2' });
++					o.depends({ mode: 'ap', encryption: 'psk-mixed' });
++					o.depends({ mode: 'ap-wds', encryption: 'psk' });
++					o.depends({ mode: 'ap-wds', encryption: 'psk2' });
++					o.depends({ mode: 'ap-wds', encryption: 'psk-mixed' });
++					o.depends({ mode: 'ap', encryption: 'sae' });
++					o.depends({ mode: 'ap', encryption: 'sae-mixed' });
++					o.depends({ mode: 'ap-wds', encryption: 'sae' });
++					o.depends({ mode: 'ap-wds', encryption: 'sae-mixed' });
++					o.rmempty = true;
++
++					o = ss.taboption('encryption', form.Flag, 'wnm_sleep_mode', _('extended sleep mode for stations'));
++					o.default = o.enabled;
++					o.depends({ ieee80211v: '1' });
++					o.rmempty = true;
++
++					o = ss.taboption('encryption', form.Flag, 'bss_transition', _('BSS Transition Management'));
++					o.default = o.enabled;
++					o.depends({ ieee80211v: '1' });
++					o.rmempty = true;
++
++					o = ss.taboption('encryption', form.ListValue, 'time_advertisement', _('Time advertisement"'));
++					o.depends({ ieee80211v: '1' });
++					o.value('0', _('disabled'));
++					o.value('2', _('UTC time at which the TSF timer is 0'));
++					o.rmempty = true;
++
++					o = ss.taboption('encryption', form.Value, 'time_zone', _('Local time zone as specified in 8.3 of IEEE Std 1003.1-2004'));
++					o.depends({ time_advertisement: '2' });
++					o.placeholder = 'UTC8';
++					o.rmempty = true;
++					// End of 802.11v options
++
+ 					// Probe 802.11r support (and EAP support as a proxy for Openwrt)
+ 					var has_80211r = L.hasSystemFeature('hostapd', '11r') || L.hasSystemFeature('hostapd', 'eap');
+ 

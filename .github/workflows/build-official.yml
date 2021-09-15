@@ -1,4 +1,4 @@
-name: Build official
+name: Build Official
 
 # Controls when the action will run. 
 on:
@@ -49,9 +49,13 @@ jobs:
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
 
-    - name: Load custom configuration
+    - name: Load custom configuration and patch
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        cd openwrt
+        for file in $GITHUB_WORKSPACE/o-patches/*.patch;do
+                patch -p1 < $file
+        done
 
     - name: Download package
       id: package
