@@ -8,6 +8,7 @@ on:
 env:
   REPO_URL: https://github.com/maskedeken/openwrt
   REPO_BRANCH: master
+  OPENCLASH_URL: https://github.com/maskedeken/openclash-alt
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   UPLOAD_BIN_DIR: false
@@ -42,6 +43,12 @@ jobs:
         df -hT $PWD
         git clone --recurse-submodules $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+    - name: Clone openclash
+      working-directory: /workdir
+      run: |
+        git clone $OPENCLASH_URL openclash-alt
+        ln -sf /workdir/openclash-alt $GITHUB_WORKSPACE/openwrt/package/maskedeken/openclash-alt
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
